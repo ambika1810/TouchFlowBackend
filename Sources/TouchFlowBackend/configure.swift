@@ -19,6 +19,10 @@ func configure(_ app: Application) async throws {
 
     let port = Environment.get("DATABASE_PORT").flatMap(Int.init) ?? 5432
 
+    var tlsConfiguration = TLSConfiguration.makeClientConfiguration()
+    tlsConfiguration.trustRoots = .file("/app/prod-ca-2021.crt")
+    tlsConfiguration.certificateVerification = .fullVerification
+
     app.databases.use(
         DatabaseConfigurationFactory.postgres(
             configuration: .init(
@@ -27,13 +31,14 @@ func configure(_ app: Application) async throws {
                 username: username,
                 password: password,
                 database: database,
-                tls: .require(try .init(configuration: .clientDefault))
+                tls: .require(
+                    try .init(configuration: tlsConfiguration)
+                )
             )
         ),
         as: .psql
     )
 
     app.migrations.add(CreateTodo())
-
     try routes(app)
 }
