@@ -20,7 +20,10 @@ func configure(_ app: Application) async throws {
     let port = Environment.get("DATABASE_PORT").flatMap(Int.init) ?? 5432
 
     var tlsConfiguration = TLSConfiguration.makeClientConfiguration()
-    tlsConfiguration.trustRoots = .file("/app/prod-ca-2021.crt")
+    let certificatePath = Environment.get("DATABASE_CA_CERT_PATH")
+        ?? "prod-ca-2021.crt"
+
+    tlsConfiguration.trustRoots = .file(certificatePath)
     tlsConfiguration.certificateVerification = .fullVerification
 
     app.databases.use(
@@ -39,6 +42,6 @@ func configure(_ app: Application) async throws {
         as: .psql
     )
 
-    app.migrations.add(CreateTodo())
+    app.migrations.add(CreatePost())
     try routes(app)
 }
