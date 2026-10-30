@@ -24,15 +24,22 @@ final class Post: Model, @unchecked Sendable {
     @OptionalField(key: "createdAt")
     var createdAt: Date?
 
-    init() { }
+    @Field(key: "likesCount")
+    var likesCount: Int
 
+    @Field(key: "commentsCount")
+    var commentsCount: Int
+    
+    init() { }
     init(
         id: UUID? = nil,
         title: String,
         caption: String? = nil,
         authorName: String? = nil,
         imageURL: String? = nil,
-        createdAt: Date? = nil
+        createdAt: Date? = nil,
+        likesCount: Int = 0,
+        commentsCount: Int = 0
     ) {
         self.id = id
         self.title = title
@@ -40,8 +47,10 @@ final class Post: Model, @unchecked Sendable {
         self.authorName = authorName
         self.imageURL = imageURL
         self.createdAt = createdAt
+        self.likesCount = likesCount
+        self.commentsCount = commentsCount
     }
-
+    
     func toDTO() -> PostDTO {
         PostDTO(
             id: id,
@@ -49,7 +58,9 @@ final class Post: Model, @unchecked Sendable {
             caption: caption,
             authorName: authorName,
             imageURL: imageURL,
-            createdAt: createdAt
+            createdAt: createdAt,
+            likesCount: likesCount,
+            commentsCount: commentsCount
         )
     }
 }

@@ -10,6 +10,8 @@ struct PostDTO: Content {
     var authorName: String?
     var imageURL: String?
     var createdAt: Date?
+    var likesCount: Int?
+    var commentsCount: Int?
 
     func toModel() -> Post {
         Post(
@@ -18,7 +20,10 @@ struct PostDTO: Content {
             caption: caption,
             authorName: authorName,
             imageURL: imageURL,
-            createdAt: createdAt
+            createdAt: createdAt,
+            likesCount: 0,
+            commentsCount: 0
         )
     }
 }
+
