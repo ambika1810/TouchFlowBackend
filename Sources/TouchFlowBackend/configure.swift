@@ -43,5 +43,7 @@ func configure(_ app: Application) async throws {
     )
 
     app.migrations.add(CreatePost())
+    app.migrations.add(AddPostFields())
+    
     try routes(app)
 }

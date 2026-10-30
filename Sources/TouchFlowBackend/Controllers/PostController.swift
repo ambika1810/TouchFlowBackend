@@ -17,14 +17,20 @@ struct PostController: RouteCollection {
     @Sendable
     func index(req: Request) async throws -> [PostDTO] {
         try await Post.query(on: req.db)
+            .sort(\.$createdAt, .descending)
             .all()
             .map { $0.toDTO() }
     }
 
     @Sendable
     func create(req: Request) async throws -> PostDTO {
-        let post = try req.content.decode(PostDTO.self).toModel()
+        let dto = try req.content.decode(PostDTO.self)
+
+        let post = dto.toModel()
+        post.createdAt = Date()
+
         try await post.save(on: req.db)
+
         return post.toDTO()
     }
 
@@ -38,6 +44,7 @@ struct PostController: RouteCollection {
         }
 
         try await post.delete(on: req.db)
+
         return .noContent
     }
 }
